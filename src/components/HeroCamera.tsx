@@ -1,30 +1,37 @@
-import { useFrame } from "@react-three/fiber";
-import { easing } from "maath";
-import { useRef, type PropsWithChildren } from "react";
-import * as THREE from "three";
+import { useRef, type ReactNode } from 'react'
+import { useFrame } from '@react-three/fiber'
+import { easing } from 'maath'
+import * as THREE from 'three'
 
 interface HeroCameraProps {
-  isMobile: boolean;
+  children: ReactNode
+  isMobile: boolean
 }
 
-export const HeroCamera = ({
-  children,
-  isMobile,
-}: PropsWithChildren<HeroCameraProps>) => {
-  const groupRef = useRef<THREE.Group>(null);
+export default function HeroCamera({ children, isMobile }: HeroCameraProps) {
+  const groupRef = useRef<THREE.Group>(null)
 
   useFrame((state, delta) => {
-    easing.damp3(state.camera.position, [0, 0, 20], 0.25, delta);
+    if (!groupRef.current) return
 
-    if (!isMobile && groupRef.current) {
-      easing.dampE(
-        groupRef.current.rotation,
-        [-state.pointer.y / 3, -state.pointer.x / 5, 0],
+    // Smooth camera follow on desktop only
+    if (!isMobile) {
+      easing.damp3(
+        state.camera.position,
+        [state.pointer.x * 0.5, state.pointer.y * 0.3 + 1, 14],
         0.25,
-        delta
-      );
+        delta,
+      )
     }
-  });
 
-  return <group ref={groupRef}>{children}</group>;
-};
+    // Subtle rotation based on pointer
+    easing.dampE(
+      groupRef.current.rotation,
+      [state.pointer.y * 0.06, state.pointer.x * 0.12, 0],
+      0.25,
+      delta,
+    )
+  })
+
+  return <group ref={groupRef}>{children}</group>
+}

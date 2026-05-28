@@ -1,24 +1,13 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { Toaster } from "sonner";
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App'
 
-import App from "./App.tsx";
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Root element #root not found in DOM.')
 
-import "./index.css";
-
-createRoot(document.getElementById("root")!).render(
+createRoot(rootElement).render(
   <StrictMode>
-    <Toaster
-      theme="dark"
-      richColors
-      closeButton
-      toastOptions={{
-        style: {
-          background: "#1C1C21",
-        },
-      }}
-    />
-
     <App />
-  </StrictMode>
-);
+  </StrictMode>,
+)

@@ -1,45 +1,32 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+/**
+ * Merge Tailwind classes safely, resolving conflicts.
+ * Uses clsx for conditional classes + tailwind-merge to deduplicate.
+ */
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs))
 }
 
-export function calculateSizes(
-  isSmall: boolean,
-  isMobile: boolean,
-  isTablet: boolean
-) {
-  return {
-    deskScale: isSmall ? 0.05 : isMobile ? 0.06 : 0.065,
-    deskPosition: isMobile ? [0.5, -4.5, 0] : [0.25, -5.5, 0],
-    cubePosition: isSmall
-      ? [4, -5, 0]
-      : isMobile
-        ? [5, -5, 0]
-        : isTablet
-          ? [5, -5, 0]
-          : [9, -5.5, 0],
-    reactLogoPosition: isSmall
-      ? [3, 4, 0]
-      : isMobile
-        ? [5, 4, 0]
-        : isTablet
-          ? [5, 4, 0]
-          : [12, 3, 0],
-    ringPosition: isSmall
-      ? [-5, 7, 0]
-      : isMobile
-        ? [-10, 10, 0]
-        : isTablet
-          ? [-12, 10, 0]
-          : [-24, 10, 0],
-    targetPosition: isSmall
-      ? [-5, -10, -10]
-      : isMobile
-        ? [-9, -10, -10]
-        : isTablet
-          ? [-11, -7, -10]
-          : [-13, -13, -10],
-  };
-}
+/**
+ * EmailJS environment variable accessors with clear error messages.
+ * Centralises env access so there is one place to fix if keys change.
+ */
+export const emailjsConfig = {
+  get serviceId(): string {
+    const val = import.meta.env['VITE_APP_EMAILJS_SERVICE_ID'] as string | undefined
+    if (!val) throw new Error('Missing VITE_APP_EMAILJS_SERVICE_ID in .env.local')
+    return val
+  },
+  get templateId(): string {
+    const val = import.meta.env['VITE_APP_EMAILJS_TEMPLATE_ID'] as string | undefined
+    if (!val) throw new Error('Missing VITE_APP_EMAILJS_TEMPLATE_ID in .env.local')
+    return val
+  },
+  get publicKey(): string {
+    const val = import.meta.env['VITE_APP_EMAILJS_PUBLIC_KEY'] as string | undefined
+    if (!val) throw new Error('Missing VITE_APP_EMAILJS_PUBLIC_KEY in .env.local')
+    return val
+  },
+} as const

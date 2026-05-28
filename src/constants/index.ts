@@ -1,301 +1,149 @@
-export const links = {
-  contactEmail: "aaryax135@gmail.com",
-  sourceCode: "https://github.com/aaryaa135/portfolio_test",
-};
+// ─── Navigation ──────────────────────────────────────────────────────────────
+export const NAV_LINKS = [
+  { id: 'about',      label: 'About' },
+  { id: 'work',       label: 'Work' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'contact',    label: 'Contact' },
+] as const
 
-export const navLinks = [
+// ─── Projects ────────────────────────────────────────────────────────────────
+export interface Project {
+  readonly id: number
+  readonly title: string
+  readonly description: string
+  readonly spotlight: string
+  readonly image: string
+  readonly iconLists: readonly string[]
+  readonly link: string
+}
+
+export const PROJECTS: readonly Project[] = [
   {
     id: 1,
-    name: "Home",
-    href: "#",
+    title: 'YC Directory — Startup Pitch Platform',
+    description: 'A Next.js 15 platform where entrepreneurs can submit startup ideas and gain exposure. Features real-time content updates, Sanity CMS and GitHub OAuth.',
+    spotlight: '/assets/spotlight1.png',
+    image: '/assets/p1.svg',
+    iconLists: ['/assets/re.svg', '/assets/tail.svg', '/assets/ts.svg'],
+    link: 'https://github.com/aaryaa135',
   },
   {
     id: 2,
-    name: "About",
-    href: "#about",
+    title: '3D iPhone 15 Pro — Product Landing Page',
+    description: 'An Apple-inspired product page with GSAP scroll-triggered animations and a Three.js 3D iPhone model you can rotate and inspect.',
+    spotlight: '/assets/spotlight2.png',
+    image: '/assets/p2.svg',
+    iconLists: ['/assets/re.svg', '/assets/tail.svg', '/assets/ts.svg', '/assets/three.svg'],
+    link: 'https://github.com/aaryaa135',
   },
   {
     id: 3,
-    name: "Work",
-    href: "#work",
+    title: 'AI Image SaaS — Cloudinary Integration',
+    description: 'A production-grade AI image-editing SaaS with Cloudinary AI transformations, Stripe payments, Clerk auth, and a credits system.',
+    spotlight: '/assets/spotlight3.png',
+    image: '/assets/p3.svg',
+    iconLists: ['/assets/re.svg', '/assets/tail.svg', '/assets/ts.svg', '/assets/c.svg'],
+    link: 'https://github.com/aaryaa135',
   },
   {
     id: 4,
-    name: "Contact",
-    href: "#contact",
+    title: 'Animated Portfolio — Three.js + GSAP',
+    description: 'The very portfolio you are looking at — built with React, Three.js 3D models, GSAP scroll animations, and EmailJS contact integration.',
+    spotlight: '/assets/spotlight4.png',
+    image: '/assets/p4.svg',
+    iconLists: ['/assets/re.svg', '/assets/tail.svg', '/assets/ts.svg', '/assets/three.svg'],
+    link: 'https://github.com/aaryaa135/portfolio_test',
   },
-] as const;
+]
 
-export const clientReviews = [
+// ─── Experience ───────────────────────────────────────────────────────────────
+export interface WorkExperience {
+  readonly id: number
+  readonly title: string
+  readonly company: string
+  readonly icon: string
+  readonly iconBg: string
+  readonly date: string
+  readonly points: readonly string[]
+}
+
+export const WORK_EXPERIENCE: readonly WorkExperience[] = [
   {
     id: 1,
-    name: "abc",
-    position: "abc",
-    img: "/assets/abc.png",
-    review:
-      "abc",
+    title: 'Frontend Developer Intern',
+    company: 'Tech Startup',
+    icon: '/assets/exp1.svg',
+    iconBg: '#accbe1',
+    date: 'Jan 2023 — Apr 2023',
+    points: [
+      'Built responsive UI components using React and Tailwind CSS.',
+      'Improved Lighthouse performance score from 62 to 91 by optimising images and lazy-loading routes.',
+      'Collaborated with designers in Figma to ship pixel-perfect screens.',
+    ],
   },
   {
     id: 2,
-    name: "abc",
-    position: "abc",
-    img: "/assets/abc.png",
-    review:
-      "abc",
+    title: 'Full-Stack Developer',
+    company: 'Freelance',
+    icon: '/assets/exp2.svg',
+    iconBg: '#fbc3bc',
+    date: 'May 2023 — Present',
+    points: [
+      'Designed and built 5+ client websites using Next.js, Supabase, and Stripe.',
+      'Integrated EmailJS for transactional email without exposing API keys client-side.',
+      'Set up CI/CD pipelines on Vercel with preview deployments per PR.',
+    ],
   },
   {
     id: 3,
-    name: "abc",
-    position: "abc",
-    img: "/assets/abc.png",
-    review:
-      "abc",
+    title: 'Open Source Contributor',
+    company: 'Various Projects',
+    icon: '/assets/exp3.svg',
+    iconBg: '#b7e4c7',
+    date: '2023 — Present',
+    points: [
+      'Contributed bug fixes and documentation to OSS projects.',
+      'Authored a GSAP utility library with 200+ npm downloads.',
+    ],
   },
-  {
-    id: 4,
-    name: "abc",
-    position: "abc",
-    img: "/assets/abc.png",
-    review:
-      "abc",
-  },
-] as const;
+]
 
-export const myProjects = [
-  {
-    title: "",
-    desc: "",
-    subdesc:
-      "",
-    href: "https://www.example.com",
-    texture: "",
-    logo: "",
-    logoStyle: {
-      backgroundColor: "#2A1816",
-      border: "0.2px solid #36201D",
-      boxShadow: "0px 0px 60px 0px #AA3C304D",
-    },
-    spotlight: "/assets/spotlight1.png",
-    tags: [
-      {
-        id: 1,
-        name: "React.js",
-        path: "/assets/react.svg",
-      },
-      {
-        id: 2,
-        name: "TailwindCSS",
-        path: "/assets/tailwindcss.png",
-      },
-      {
-        id: 3,
-        name: "TypeScript",
-        path: "/assets/typescript.png",
-      },
-      {
-        id: 4,
-        name: "Framer Motion",
-        path: "/assets/framer.png",
-      },
-    ],
-  },
-  {
-    title: "",
-    desc: "",
-    subdesc:
-      "",
-    href: "https://www.example.com",
-    texture: "",
-    logo: "",
-    logoStyle: {
-      backgroundColor: "#2A1816",
-      border: "0.2px solid #36201D",
-      boxShadow: "0px 0px 60px 0px #AA3C304D",
-    },
-    spotlight: "/assets/spotlight2.png",
-    tags: [
-      {
-        id: 1,
-        name: "React.js",
-        path: "/assets/react.svg",
-      },
-      {
-        id: 2,
-        name: "TailwindCSS",
-        path: "/assets/tailwindcss.png",
-      },
-      {
-        id: 3,
-        name: "TypeScript",
-        path: "/assets/typescript.png",
-      },
-      {
-        id: 4,
-        name: "Framer Motion",
-        path: "/assets/framer.png",
-      },
-    ],
-  },
-  {
-    title: "",
-    desc: "",
-    subdesc:
-      "",
-    href: "https://www.example.com",
-    texture: "",
-    logo: "",
-    logoStyle: {
-      backgroundColor: "#2A1816",
-      border: "0.2px solid #36201D",
-      boxShadow: "0px 0px 60px 0px #AA3C304D",
-    },
-    spotlight: "/assets/spotlight3.png",
-    tags: [
-      {
-        id: 1,
-        name: "React.js",
-        path: "/assets/react.svg",
-      },
-      {
-        id: 2,
-        name: "TailwindCSS",
-        path: "/assets/tailwindcss.png",
-      },
-      {
-        id: 3,
-        name: "TypeScript",
-        path: "/assets/typescript.png",
-      },
-      {
-        id: 4,
-        name: "Framer Motion",
-        path: "/assets/framer.png",
-      },
-    ],
-  },
-  {
-    title: "",
-    desc: "",
-    subdesc:
-      "",
-    href: "https://www.example.com",
-    texture: "",
-    logo: "",
-    logoStyle: {
-      backgroundColor: "#2A1816",
-      border: "0.2px solid #36201D",
-      boxShadow: "0px 0px 60px 0px #AA3C304D",
-    },
-    spotlight: "/assets/spotlight4.png",
-    tags: [
-      {
-        id: 1,
-        name: "React.js",
-        path: "/assets/react.svg",
-      },
-      {
-        id: 2,
-        name: "TailwindCSS",
-        path: "/assets/tailwindcss.png",
-      },
-      {
-        id: 3,
-        name: "TypeScript",
-        path: "/assets/typescript.png",
-      },
-      {
-        id: 4,
-        name: "Framer Motion",
-        path: "/assets/framer.png",
-      },
-    ],
-  },
-  {
-    title: "",
-    desc: "",
-    subdesc:
-      "",
-    href: "https://www.example.com",
-    texture: "",
-    logo: "",
-    logoStyle: {
-      backgroundColor: "#2A1816",
-      border: "0.2px solid #36201D",
-      boxShadow: "0px 0px 60px 0px #AA3C304D",
-    },
-    spotlight: "/assets/spotlight5.png",
-    tags: [
-      {
-        id: 1,
-        name: "React.js",
-        path: "/assets/react.svg",
-      },
-      {
-        id: 2,
-        name: "TailwindCSS",
-        path: "/assets/tailwindcss.png",
-      },
-      {
-        id: 3,
-        name: "TypeScript",
-        path: "/assets/typescript.png",
-      },
-      {
-        id: 4,
-        name: "Framer Motion",
-        path: "/assets/framer.png",
-      },
-    ],
-  },
-] as const;
+// ─── Testimonials ─────────────────────────────────────────────────────────────
+export interface Testimonial {
+  readonly id: number
+  readonly name: string
+  readonly position: string
+  readonly feedback: string
+  readonly img: string
+}
 
-export const workExperiences = [
+export const TESTIMONIALS: readonly Testimonial[] = [
   {
     id: 1,
-    name: "",
-    pos: "",
-    duration: "",
-    title:
-      "",
-    icon: "",
-    animation: "",
+    name: 'Emily Carter',
+    position: 'CTO, LaunchPad Inc.',
+    feedback: 'Aarya delivered our redesign 2 weeks early. The Three.js animations alone drove a 40% increase in demo signups. Exceptional attention to detail.',
+    img: 'https://randomuser.me/api/portraits/women/32.jpg',
   },
   {
     id: 2,
-    name: "",
-    pos: "",
-    duration: "",
-    title:
-      "",
-    icon: "",
-    animation: "",
+    name: 'Rajan Mehta',
+    position: 'Founder, IndieSaaS',
+    feedback: 'The best frontend developer I have hired. Clean code, great communication, and the end result looked better than our Figma designs.',
+    img: 'https://randomuser.me/api/portraits/men/44.jpg',
   },
   {
-    id: 1,
-    name: "",
-    pos: "",
-    duration: "",
-    title:
-      "",
-    icon: "",
-    animation: "",
+    id: 3,
+    name: 'Sofia Andersen',
+    position: 'Product Lead, HealthTech',
+    feedback: 'Aarya rebuilt our dashboard from scratch in 3 weeks. Performance, accessibility and aesthetics — all nailed.',
+    img: 'https://randomuser.me/api/portraits/women/68.jpg',
   },
-] as const;
+]
 
-export const socialLinks = [
-  {
-    name: "GitHub",
-    icon: "/assets/github.svg",
-    url: "https://github.com/aaryaa135",
-  },
-  {
-    name: "Twitter",
-    icon: "/assets/twitter.svg",
-    url: "https://twitter.com",
-  },
-  {
-    name: "Instagram",
-    icon: "/assets/instagram.svg",
-    url: "https://instagram.com",
-  },
-] as const;
+// ─── Social links ─────────────────────────────────────────────────────────────
+export const SOCIAL_LINKS = [
+  { label: 'GitHub',   href: 'https://github.com/aaryaa135',        icon: '/assets/github.svg' },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/aarya-gupta', icon: '/assets/linkedin.svg' },
+  { label: 'Twitter',  href: 'https://twitter.com/aarya135',        icon: '/assets/twitter.svg' },
+] as const

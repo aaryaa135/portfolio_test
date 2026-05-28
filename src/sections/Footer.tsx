@@ -1,27 +1,60 @@
-import { socialLinks } from "../constants";
+import { SOCIAL_LINKS, NAV_LINKS } from '@/constants'
 
-export const Footer = () => {
+export default function Footer() {
+  const currentYear = new Date().getFullYear()
+
   return (
-    <footer className="c-space flex flex-wrap items-center justify-between gap-5 border-t border-black-300 pb-3 pt-7">
-      <div className="text-white-500">
-        &copy; {new Date().getFullYear()} <strong>Aarya GUpta</strong>. All rights
-        reserved.
+    <footer className="border-t border-white/5 py-12 section-padding" role="contentinfo">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+
+        {/* Brand */}
+        <div className="text-center md:text-left">
+          <p className="text-white font-semibold text-lg">
+            Aarya<span className="text-[#cbacf9]">.</span>
+          </p>
+          <p className="text-white/30 text-xs mt-1">
+            Built with React + Three.js + GSAP
+          </p>
+        </div>
+
+        {/* Nav links */}
+        <nav aria-label="Footer navigation">
+          <ul className="flex flex-wrap justify-center gap-6 list-none p-0 m-0" role="list">
+            {NAV_LINKS.map(({ id, label }) => (
+              <li key={id}>
+                <button
+                  onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-white/40 hover:text-white text-sm transition-colors focus-ring rounded"
+                >
+                  {label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Socials */}
+        <ul className="flex items-center gap-4 list-none p-0 m-0" role="list">
+          {SOCIAL_LINKS.map(({ label, href, icon }) => (
+            <li key={label}>
+              <a
+                href={href}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label={`Visit Aarya on ${label}`}
+                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#cbacf9]/10 hover:border-[#cbacf9]/30 transition-all focus-ring"
+              >
+                <img src={icon} alt="" className="w-4 h-4 object-contain" aria-hidden />
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <div className="flex gap-3">
-        {socialLinks.map(({ icon, name, url }) => (
-          <a
-            href={url}
-            key={url}
-            target="_blank"
-            rel="noreferrer noopener"
-            title={name}
-            className="social-icon"
-          >
-            <img src={icon} alt={name} className="size-1/2" />
-          </a>
-        ))}
-      </div>
+      {/* Copyright */}
+      <p className="text-center text-white/20 text-xs mt-8">
+        &copy; {currentYear} Aarya Gupta. All rights reserved.
+      </p>
     </footer>
-  );
-};
+  )
+}

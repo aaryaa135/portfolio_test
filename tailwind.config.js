@@ -1,32 +1,35 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
-      fontFamily: {
-        generalsans: ["General Sans", "sans-serif"],
-      },
       colors: {
-        black: {
-          DEFAULT: "#000",
-          100: "#010103",
-          200: "#0E0E10",
-          300: "#1C1C21",
-          500: "#3A3A49",
-          600: "#1A1A1A",
-        },
-        white: {
-          DEFAULT: "#FFFFFF",
-          800: "#E4E4E6",
-          700: "#D6D9E9",
-          600: "#AFB0B6",
-          500: "#62646C",
-        },
+        'black-100': '#010103',
+        'black-200': '#0d0d12',
+        'black-300': '#1c1c21',
+        'white-100': '#f0f0f0',
+        'white-200': '#c4cfde',
+        'purple-light': '#cbacf9',
+        'purple-mid': '#b890f5',
+        'purple-dark': '#9c6fe0',
+      },
+      fontFamily: {
+        sans: ['DM Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+      },
+      borderRadius: {
+        xl: '1rem',
+        '2xl': '1.25rem',
+        '3xl': '1.5rem',
       },
       backgroundImage: {
-        terminal: "url('/assets/terminal.png')",
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+      },
+      animation: {
+        'float': 'float 4s ease-in-out infinite',
+        'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
       },
     },
   },
   plugins: [],
-};
+}

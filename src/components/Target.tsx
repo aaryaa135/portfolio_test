@@ -1,28 +1,24 @@
-import { useGSAP } from "@gsap/react";
-import { useGLTF } from "@react-three/drei";
-import type { MeshProps } from "@react-three/fiber";
-import gsap from "gsap";
-import { useRef } from "react";
-import type * as THREE from "three";
+import { useRef } from 'react'
+import { useGLTF } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
+import type { GroupProps } from '@react-three/fiber'
+import * as THREE from 'three'
 
-export const Target = (props: MeshProps) => {
-  const targetRef = useRef<THREE.Mesh>(null);
-  const { scene } = useGLTF("/models/target.gltf");
+useGLTF.preload('/models/target.glb')
 
-  useGSAP(() => {
-    if (!targetRef.current) return;
+export default function Target(props: GroupProps) {
+  const { scene } = useGLTF('/models/target.glb')
+  const ref = useRef<THREE.Group>(null)
 
-    gsap.to(targetRef.current.position, {
-      y: targetRef.current.position.y + 0.5,
-      duration: 1.5,
-      repeat: -1,
-      yoyo: true,
-    });
-  });
+  useFrame(({ clock }) => {
+    if (ref.current) {
+      ref.current.position.y = Math.sin(clock.getElapsedTime()) * 0.15
+    }
+  })
 
   return (
-    <mesh {...props} ref={targetRef} rotation={[0, Math.PI / 5, 0]} scale={1.5}>
-      <primitive object={scene} />
-    </mesh>
-  );
-};
+    <group ref={ref} {...props} dispose={null}>
+      <primitive object={scene} scale={1.5} />
+    </group>
+  )
+}

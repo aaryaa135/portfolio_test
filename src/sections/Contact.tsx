@@ -1,215 +1,189 @@
-import emailjs from "@emailjs/browser";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
+import { useRef, useState, useCallback, type FormEvent } from 'react'
+import emailjs from '@emailjs/browser'
+import { toast } from 'sonner'
+import { useGsapReveal } from '@/hooks/useGsapReveal'
+import { emailjsConfig } from '@/lib/utils'
+import Button from '@/components/Button'
 
-export const Contact = () => {
-  const formRef = useRef<HTMLFormElement>(null);
+interface FormState {
+  name: string
+  email: string
+  message: string
+}
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+const INITIAL_FORM: FormState = { name: '', email: '', message: '' }
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+/** Simple email format validator — no external dep */
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
 
-    setForm({ ...form, [name]: value });
-  };
+export default function Contact() {
+  const sectionRef = useGsapReveal<HTMLElement>('> *', { stagger: 0.1 })
+  const formRef = useRef<HTMLFormElement>(null)
+  const [form, setForm] = useState<FormState>(INITIAL_FORM)
+  const [loading, setLoading] = useState(false)
 
-  const validateForm = () => {
-    // form fields
-    const { name, email, message } = form;
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target
+      setForm((prev) => ({ ...prev, [name]: value }))
+    },
+    [],
+  )
 
-    interface Current {
-      name: boolean;
-      email: boolean;
-      message: boolean;
-    }
+  const handleSubmit = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
 
-    // Error message
-    const nameError = document.querySelector("#name-error")!;
-    const emailError = document.querySelector("#email-error")!;
-    const messageError = document.querySelector("#message-error")!;
-    const current: Current = { name: false, email: false, message: false };
+      // Client-side validation
+      if (!form.name.trim()) { toast.error('Please enter your name.'); return }
+      if (!isValidEmail(form.email)) { toast.error('Please enter a valid email address.'); return }
+      if (form.message.trim().length < 10) { toast.error('Message must be at least 10 characters.'); return }
 
-    // validate name
-    if (name.trim().length < 3) {
-      nameError.classList.remove("hidden");
-      current.name = false;
-    } else {
-      nameError.classList.add("hidden");
-      current.name = true;
-    }
-
-    // prettier-ignore
-    const email_regex =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    // valiate email
-    if (!email_regex.exec(email.trim().toLowerCase())) {
-      emailError.classList.remove("hidden");
-      current.email = false;
-    } else {
-      emailError.classList.add("hidden");
-      current.email = true;
-    }
-
-    // validate message
-    if (message.trim().length < 5) {
-      messageError.classList.remove("hidden");
-      current.message = false;
-    } else {
-      messageError.classList.add("hidden");
-      current.message = true;
-    }
-
-    // True if all fields are validated
-    return Object.keys(current).every(
-      (k) => current[k as keyof typeof current]
-    );
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    setIsLoading(true);
-
-    try {
-      await emailjs.send(
-        import.meta.env.VITE_APP_SERVICE_ID,
-        import.meta.env.VITE_APP_TEMPLATE_ID,
-        {
-          from_name: form.name,
-          to_name: "Aarya Gupta",
-          from_email: form.email,
-          to_email: import.meta.env.VITE_APP_EMAIL,
-          message: form.message,
-        },
-        {
-          publicKey: import.meta.env.VITE_APP_PUBLIC_KEY,
-        }
-      );
-
-      setForm({
-        name: "",
-        email: "",
-        message: "",
-      });
-
-      toast.success("Your message has been sent!");
-    } catch (error) {
-      console.error(error);
-
-      toast.error("Something went wrong!");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      setLoading(true)
+      try {
+        await emailjs.send(
+          emailjsConfig.serviceId,
+          emailjsConfig.templateId,
+          {
+            from_name: form.name.trim(),
+            to_name: 'Aarya',
+            from_email: form.email.trim(),
+            to_email: 'aarya@example.com', // replace with your email
+            message: form.message.trim(),
+          },
+          emailjsConfig.publicKey,
+        )
+        toast.success("Message sent! I'll get back to you within 24 hours.")
+        setForm(INITIAL_FORM)
+      } catch (err) {
+        console.error('[EmailJS]', err)
+        toast.error('Something went wrong. Please try again or email me directly.')
+      } finally {
+        setLoading(false)
+      }
+    },
+    [form],
+  )
 
   return (
-    <section className="c-space my-20" id="contact">
-      <div className="relative flex min-h-screen flex-col items-center justify-center">
-        <img
-          src="/assets/terminal.png"
-          alt="Terminal"
-          className="absolute inset-0 h-full min-h-screen"
-        />
+    <section
+      id="contact"
+      ref={sectionRef}
+      className="py-24 section-padding"
+      aria-label="Contact me"
+    >
+      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-        <div className="contact-container">
-          <h3 className="head-text">Let&apos;s talk</h3>
-
-          <p className="mt-3 text-lg text-white-600">
-            Whether you&apos;re looking to build a new website, improve your
-            existing platform, or bring a unique project to life, I&apos;m here
-            to collab and help.
+        {/* Left — copy */}
+        <div>
+          <p className="text-sm font-mono text-[#cbacf9] tracking-widest uppercase mb-2">Contact</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Let&apos;s build{' '}
+            <span className="text-[#cbacf9]">together</span>
+          </h2>
+          <p className="text-white/50 leading-relaxed mb-8">
+            Whether you have a project in mind, a job opportunity, or just want to say hi —
+            my inbox is always open.
           </p>
 
+          {/* Contact links */}
+          <ul className="flex flex-col gap-3 list-none p-0 m-0" role="list">
+            {([
+              ['📧', 'Email', 'aarya@example.com', 'mailto:aarya@example.com'],
+              ['💼', 'LinkedIn', '/in/aarya-gupta', 'https://linkedin.com/in/aarya-gupta'],
+              ['🐙', 'GitHub', '/aaryaa135', 'https://github.com/aaryaa135'],
+            ] as const).map(([icon, label, display, href]) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel="noreferrer noopener"
+                  className="flex items-center gap-3 text-white/60 hover:text-white transition-colors group focus-ring rounded px-1"
+                >
+                  <span className="text-xl" aria-hidden>{icon}</span>
+                  <span className="text-sm">
+                    <strong className="text-white/80 font-medium">{label}</strong>
+                    {' — '}
+                    <span className="group-hover:text-[#cbacf9] transition-colors">{display}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Right — form */}
+        <div className="card-glass p-8">
           <form
             ref={formRef}
-            onSubmit={(e) => void handleSubmit(e)}
-            className="mt-12 flex flex-col space-y-7"
+            onSubmit={handleSubmit}
+            noValidate
+            aria-label="Contact form"
+            className="flex flex-col gap-5"
           >
-            <label className="space-y-3">
-              <span className="field-label">Full name</span>
-
+            <div>
+              <label htmlFor="contact-name" className="block text-sm text-white/70 mb-2">
+                Your name <span className="text-[#cbacf9]" aria-hidden>*</span>
+              </label>
               <input
-                type="text"
+                id="contact-name"
                 name="name"
+                type="text"
+                required
+                autoComplete="name"
                 value={form.name}
                 onChange={handleChange}
-                className="field-input disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-75"
-                placeholder="Your Name"
-                autoCapitalize="on"
-                disabled={isLoading}
+                placeholder="Aarya Gupta"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-[#cbacf9]/50 transition-colors"
               />
+            </div>
 
-              <span className="hidden text-red-400" id="name-error">
-                Invalid Name!
-              </span>
-            </label>
-
-            <label className="space-y-3">
-              <span className="field-label">Email</span>
-
+            <div>
+              <label htmlFor="contact-email" className="block text-sm text-white/70 mb-2">
+                Email address <span className="text-[#cbacf9]" aria-hidden>*</span>
+              </label>
               <input
-                type="email"
+                id="contact-email"
                 name="email"
+                type="email"
+                required
+                autoComplete="email"
                 value={form.email}
                 onChange={handleChange}
-                className="field-input disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-75"
-                placeholder="your.mail@example.com"
-                autoCapitalize="off"
-                disabled={isLoading}
+                placeholder="hello@example.com"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-[#cbacf9]/50 transition-colors"
               />
+            </div>
 
-              <span className="hidden text-red-400" id="email-error">
-                Invalid Email!
-              </span>
-            </label>
-
-            <label className="space-y-3">
-              <span className="field-label">Your message</span>
-
+            <div>
+              <label htmlFor="contact-message" className="block text-sm text-white/70 mb-2">
+                Message <span className="text-[#cbacf9]" aria-hidden>*</span>
+              </label>
               <textarea
+                id="contact-message"
                 name="message"
+                required
+                rows={5}
                 value={form.message}
                 onChange={handleChange}
-                rows={5}
-                className="field-input disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-75"
-                placeholder="Hi, I'm interested in..."
-                autoCapitalize="on"
-                disabled={isLoading}
+                placeholder="Tell me about your project..."
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-[#cbacf9]/50 transition-colors resize-none"
               />
+            </div>
 
-              <span className="hidden text-red-400" id="message-error">
-                Invalid Message!
-              </span>
-            </label>
-
-            <button
+            <Button
               type="submit"
-              className="field-btn disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-75"
-              disabled={isLoading}
+              withArrow={!loading}
+              isLoading={loading}
+              className="w-full justify-center"
             >
-              {isLoading ? "Sending..." : "Send Message"}
-
-              {!isLoading && (
-                <img
-                  src="/assets/arrow-up.png"
-                  alt="Arrow"
-                  className="field-btn_arrow"
-                />
-              )}
-            </button>
+              {loading ? 'Sending…' : 'Send message'}
+            </Button>
           </form>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
